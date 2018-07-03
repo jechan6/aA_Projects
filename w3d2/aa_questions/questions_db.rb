@@ -77,11 +77,11 @@ class Users
   end 
   
   def average_karma
-    questions_authored = authored_questions
-    QuestionsDatabase.instance.execute(<<-SQL, @id)
+  
+    question_like_count = QuestionsDatabase.instance.execute(<<-SQL, @id)
     
       SELECT
-        *, COUNT(DISTINCT(question_likes.id))
+        COUNT(question_likes.id)  / CAST(COUNT(DISTINCT(questions.id)) AS FLOAT)  AS avg_karma
       FROM
         questions
       LEFT JOIN
@@ -89,15 +89,34 @@ class Users
       ON
         questions.id = question_likes.question_id
       WHERE
-        quesitons.author_id = ?
+        questions.author_id = ?
     SQL
-
-    
-    # SELECT *, COUNT(DISTINCT(question_likes.id)) FROM questions LEFT JOIN question_likes
-    # ON questions.id  = question_likes.question_id
-    # WHERE questions.author_id = 1;
-    
+    return nil if question_like_count.length <= 0
+    question_like_count.first["avg_karma"]
   end
+  
+  def save 
+    if @id 
+      QuestionsDatabase.instance.execute(<<-SQL, @fname, @lname, @id)
+        UPDATE users
+        SET fname = ?, lname = ?
+        WHERE 
+          id = ?
+      SQL
+    else 
+      QuestionsDatabase.instance.execute(<<-SQL, @fname, @lname)
+        INSERT INTO
+          users (fname, lname)
+        VALUES
+          (?, ?)
+      
+      SQL
+      @id = QuestionsDatabase.instance.last_insert_row_id
+    end 
+      
+    
+  end 
+  
 end 
 
 class Questions 
@@ -436,9 +455,4 @@ class QuestionLikes
     @id = QuestionsDatabase.instance.last_insert_row_id
   end
   
-  
-  
-  
 end
-
-
