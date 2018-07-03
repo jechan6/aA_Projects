@@ -1,5 +1,6 @@
 require "sqlite3"
 require "singleton"
+
 class QuestionsDatabase < SQLite3::Database
   include Singleton
   
@@ -58,11 +59,21 @@ class Users
     
     @id = QuestionsDatabase.instance.last_insert_row_id
   end 
-
+  
+  def authored_questions
+    author_questions = Questions.find_by_author_id(@id)
+  end 
+  
+  def authored_replies 
+    authored_replies = Reply.find_by_question_id(@id)
+  end 
+  
+  def followed_questions 
+    followed_questions = QuestionFollows.followed_questions_for_user_id(@id)
+  end 
 end 
 
 class Questions 
-  
   attr_accessor :title, :body
   attr_reader :author_id, :id 
   
@@ -86,6 +97,7 @@ class Questions
         *
       FROM
         questions
+        
       WHERE
         author_id = ?
     SQL
@@ -95,6 +107,9 @@ class Questions
     question.map {|el| Questions.new(el)}
   end
   
+  def self.most_followed(n)
+    QuestionFollows.most_followed_questions(n)
+  end 
   
   def initialize(options)
     @id = options['id']
@@ -112,6 +127,183 @@ class Questions
         (?, ?, ?)
     SQL
     @id = QuestionsDatabase.instance.last_insert_row_id
+  end
+  
+  def author 
+    author  = QuestionsDatabase.instance.execute(<<-SQL, @author_id)
+      SELECT
+        *
+      FROM
+        users
+      WHERE
+        users.id = ?
+    SQL
+  end
+  
+  def replies 
+    replies = Reply.find_by_question_id(@id)
+  end 
+  
+  def followers 
+    QuestionFollows.followers_for_question_id(@id)
+  end 
+  
+end
+
+class QuestionFollows
+  attr_reader :user_id, :question_id
+  
+  def self.followers_for_question_id(question_id)
+    
+    users = QuestionsDatabase.instance.execute(<<-SQL,question_id)
+      SELECT 
+        *
+      FROM 
+        users
+      JOIN question_follows
+        ON users.id = question_follows.user_id
+      WHERE question_id = ?
+    
+    SQL
+    return nil unless users.length > 0
+    users.map{|el| Users.new(el)}
+    
+  end 
+  
+  def self.followed_questions_for_user_id(user_id)
+    
+    questions = QuestionsDatabase.instance.execute(<<-SQL, user_id)
+      SELECT 
+        *
+      FROM 
+        questions
+      JOIN question_follows
+        ON questions.author_id = question_follows.user_id
+      WHERE question_follows.user_id = ?
+    SQL
+    
+    return nil unless questions.length > 0
+    questions.map{|el| Questions.new(el)}
+
   end 
 
+  def self.most_followed_questions(n)
+    questions = QuestionsDatabase.instance.execute(<<-SQL, n)
+      SELECT
+        *
+      FROM 
+        questions 
+      JOIN question_follows 
+        ON questions.id = question_follows.question_id
+      GROUP BY 
+        question_follows.question_id 
+      ORDER BY 
+        COUNT(user_id) DESC
+      LIMIT ? 
+    SQL
+    
+    return nil unless questions.length > 0
+    questions.map{|el| Questions.new(el)}
+  end 
+  
+  def initialize(options)
+    @user_id = options['user_id']
+    @question_id = options['question_id']
+  end
+  
+  def create
+    raise "#{self} already in database" if @user_id
+    QuestionsDatabase.instance.execute(<<-SQL, @user_id, @question_id)
+      INSERT INTO
+        question_follows(user_id, question_id)
+      VALUES
+        (?, ?)
+    SQL
+    
+    @id = QuestionsDatabase.instance.last_insert_row_id
+  end
+  
 end
+
+class Reply 
+  attr_accessor :body
+  attr_reader :question_id, :id, :parent_id, :user_id
+  
+  def initialize(options)
+    @question_id = options['question_id']
+    @parent_id = options['parent_id']
+    @user_id = options['user_id']
+    @body = options['body']
+  end
+  
+  def create 
+    raise "#{self} already in database" if @id
+    QuestionsDatabase.instance.execute(<<-SQL, @question_id, @parent_id, @user_id, @body)
+      INSERT INTO
+        replies_reply(question_id, parent_id, user_id, body)
+      VALUES
+        (?, ?, ?, ?)
+    SQL
+    @id = QuestionsDatabase.instance.last_insert_row_id
+  end
+  
+  def author 
+    author  = QuestionsDatabase.instance.execute(<<-SQL, @user_id)
+      SELECT
+        *
+      FROM
+        users
+      WHERE
+        users.id = ?
+    SQL
+    
+    return nil unless author.length > 0
+    Users.new(author.first)
+  end 
+  
+  def question
+    question = QuestionsDatabase.instance.execute(<<-SQL, @question_id)
+      SELECT
+        *
+      FROM
+        questions
+      WHERE
+        questions.id = ?
+    SQL
+    
+    return nil unless question.length > 0
+    Questions.new(question.first)
+  end
+  
+  def parent_reply
+    reply = QuestionsDatabase.instance.execute(<<-SQL, @parent_id)
+      SELECT
+        *
+      FROM
+        replies
+      WHERE
+        replies.id = ?
+    SQL
+    
+    return nil unless reply.length > 0
+    Reply.new(reply.first)
+  end
+  
+  def child_reply
+    reply = QuestionsDatabase.instance.execute(<<-SQL, @id)
+      SELECT
+        *
+      FROM
+        replies
+      WHERE
+        replies.parent_id = ?
+    SQL
+    
+    return nil unless reply.length > 0
+    Reply.new(reply.first)
+  end
+  
+end 
+
+
+
