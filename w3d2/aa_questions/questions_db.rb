@@ -1,6 +1,32 @@
 require "sqlite3"
 require "singleton"
 
+class ModelBase
+  
+  def self.find_by_id(id)
+    name = self.table_name
+
+    data = QuestionsDatabase.instance.execute(<<-SQL, id)
+      SELECT
+        *
+      FROM
+        "#{name}"
+      WHERE
+        id = ?
+    SQL
+    return nil unless data.length > 0
+    return self.new(data.first) 
+  end 
+  
+  def self.all
+  end
+  
+  def self.table_name
+    self.to_s.downcase
+  end
+  
+end
+
 class QuestionsDatabase < SQLite3::Database
   include Singleton
   
@@ -12,23 +38,23 @@ class QuestionsDatabase < SQLite3::Database
  
 end 
 
-class Users
+class Users < ModelBase
   attr_accessor :fname, :lname
   attr_reader :id
-
-  def self.find_by_id(id)
-    data = QuestionsDatabase.instance.execute(<<-SQL, id)
-      SELECT
-        *
-      FROM
-        users
-      WHERE
-        id = ?
-    SQL
-    return nil unless data.length > 0
-    return Users.new(data.first) 
-  end 
   
+  # def self.find_by_id(id)
+  #   data = QuestionsDatabase.instance.execute(<<-SQL, id)
+  #     SELECT
+  #       *
+  #     FROM
+  #       users
+  #     WHERE
+  #       id = ?
+  #   SQL
+  #   return nil unless data.length > 0
+  #   return Users.new(data.first) 
+  # end 
+  # 
   def self.find_by_name(fname, lname)
     user = QuestionsDatabase.instance.execute(<<-SQL, fname, lname)
       SELECT 
@@ -39,8 +65,9 @@ class Users
         fname = ? AND 
         lname = ?
     SQL
-    
-  end 
+  
+  end
+   
   
   def initialize(options)
     @id = options['id']
@@ -454,5 +481,6 @@ class QuestionLikes
     
     @id = QuestionsDatabase.instance.last_insert_row_id
   end
-  
 end
+
+
