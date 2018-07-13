@@ -1,0 +1,25 @@
+<% 
+if action == :new
+  action = users_url
+  button_txt = "Sign Up"
+else 
+  action = session_url
+  button_txt = "Log In"
+
+end 
+
+%>
+
+
+
+<form class="form" action="<%= action %>" method="post">
+  <input type="hidden" name="authenticity_token" value="form_authenticity_token">
+  
+  <label for="email">Email: </label>
+  <input type="email" name="user[email]" value=""><br>
+  
+  <label for="password">Password: </label>
+  <input type="password" name="user[password]" value=""><br>
+  
+  <input type="submit" value="<%= button_txt %>">
+</form>

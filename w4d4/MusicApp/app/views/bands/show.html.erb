@@ -1,0 +1,8 @@
+<form action="<%= bands_url %>" method="get">
+  <input type="submit" value="Go to Index">
+</form> 
+<form action="<%= new_band_album_url(@bands) %>" method="get">
+  <input type="submit" value="Create Album">
+</form> 
+
+<h1> Band: <%= @bands.name %> </h1>

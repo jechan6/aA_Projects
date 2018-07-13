@@ -1,0 +1,33 @@
+// Place all the styles related to the Users controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+label {
+  color: black;
+  font-size: 20px;
+}
+.form label, .form label input{
+  display: block;
+  padding-right: 10px;
+}
+p, h1, input {
+  font-size: 25px;
+}
+
+input[type="submit"] {
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom:10px;
+  margin-top: 15px;
+  background-color: skyblue;
+  border: none;
+  font-family: 'Fjalla One', sans-serif;
+  
+}
+
+input[type="submit"]:hover {
+
+  color:white;
+  background-color: #6495ED;
+  transition: background-color 300ms linear;
+  
+}

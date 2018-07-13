@@ -1,0 +1,53 @@
+
+<style >
+  table,
+  td {
+    border: 1px solid #333;
+  }
+  thead {
+      background-color: #333;
+      color: #fff;
+  }
+</style>
+<h1>Bands!</h1>
+<table>
+    <thead>
+        <tr>
+            <th colspan="2">Bands</th>
+        </tr>
+        <tr>
+          <form action="<%= new_band_url %>" method="get">
+            <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token  %>">
+            <input type="submit" value="Create Band">
+          </form> 
+        </tr>
+    </thead>
+    <tbody>
+        <% @bands.each do |band| %>
+          <tr class="band_name">
+            <td colspan="2"> <%= band.name %></td>
+          </tr>  
+          <tr>
+              <td>  
+                <form action="<%= band_url(band) %>" method="post">
+                  <input type="hidden" name="_method" value="delete">
+                  <input type="hidden" name="authenticity_token" value=" <%= form_authenticity_token  %> ">
+                  <input type="submit" value="Delete">
+                </form> 
+              </td>
+              
+              <td>
+                <form action="<%= edit_band_url(band) %>" method="get">
+                  <input type="submit" value="Edit">
+                </form>
+              </td>
+          </tr>
+        <% end %>
+    </tbody>
+</table>
+
+
+  
+  
+
+

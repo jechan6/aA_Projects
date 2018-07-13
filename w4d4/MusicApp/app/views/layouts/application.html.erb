@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MusicApp</title>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <link href="https://fonts.googleapis.com/css?family=Permanent+Marker" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet">
+  </head>
+
+  <body>
+    <section class="content">
+      <h1 class="main-logo">Music App</h1>
+      <% if current_user %>
+        <form action=" <%= session_url %> " method="post">
+          <input type="hidden" name="_method" value="delete">
+          <input type="hidden" name="authenticity_token" value="form_authenticity_token">
+          <input type="submit" value="Log Out">
+        </form>
+      <% else %>
+      
+        <% if request.path == "/session/new"
+            action = new_user_url
+            button_txt = "Go to sign-up"
+            welcome_txt = "Sign In!"
+          else 
+            action = new_session_url
+            button_txt = "Go to sign-in"
+            welcome_txt = "New User"
+          end
+         %>
+         <h1><%= welcome_txt %></h1>
+        <form action=" <%= action %> " method="get">
+          <input type="hidden" name="authenticity_token" value="form_authenticity_token">
+          <input type="submit" value="<%= button_txt %>">
+        </form>
+      
+      <% end %>
+      
+      <%= yield %>
+    </section>
+  </body>
+</html>
