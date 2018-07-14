@@ -1,0 +1,18 @@
+<h1> <%= @user.username %> </h1>
+<h1> <%= @user.password %> </h1>
+
+
+<% @goals.each do |goal| %>
+<ul>Goal: <%= goal.goal %>
+<li><%= goal.completed? ? "Complete" : "Incomplete" %></li>
+<li><%= goal.public? ? "Public" : "Private" %></li>
+</ul>
+<% end %>
+
+
+<form action="<%= session_url %>" method="post">
+  <input type="hidden" name="_method" value="delete">
+  <input type="hidden" name="authenticity_token" value="form_authenticity_token">
+  <label for="Log Out">Log Out</label>
+  <input id="Log Out" type="submit" value="Log Out">
+</form>
