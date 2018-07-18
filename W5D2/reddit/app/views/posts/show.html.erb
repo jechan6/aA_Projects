@@ -1,0 +1,16 @@
+<h1><%=link_to @post.title, post_url(@post)%> by <%=@post.author.username%></h1>
+<p>Content: <%=@post.content%></p>
+
+<h3>Subs</h3>
+<ul>
+  <% @post.subs.each do |sub| %>
+    <li><%=sub.title%></li>
+  <% end %>
+</ul>
+<%= link_to "New Comment", new_post_comment_url(@post) %>
+<% @post.comments.each do |comment| %>
+  <ul>
+    <li><%=comment.content%></li>
+  </ul>
+
+<% end %>
