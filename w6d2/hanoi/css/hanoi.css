@@ -1,0 +1,51 @@
+.hanoi {
+
+  margin: 0 auto;
+  width: 800px;
+}
+ul {
+  padding: 0;
+}
+.hanoi ul {
+  float: left;
+  align-items: center;
+  list-style-type: none;
+  
+}
+.hanoi ul {
+  margin-left: 20px;
+  position: relative;
+  height: 200px;
+  width: 200px;
+  
+}
+
+.hanoi ul li {
+
+  background-color: grey;
+  margin-top: 10px;
+  align-items: center;
+  margin: 0 auto;
+  margin-bottom: 5px;
+  padding: 8px;
+  border-radius: 25px;
+}
+
+.disc1 {
+  width: 100px;
+
+}
+.disc2 {
+  width: 150px;
+}
+.clicked {
+  border-bottom: 10px solid red;
+}
+.hover {
+  border-bottom: 10px solid yellow;
+}
+.mouseover {
+  border-bottom: 10px solid black;
+}
+
+
