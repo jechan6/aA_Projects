@@ -1,0 +1,40 @@
+.nav-bar {
+  display: flex;
+  
+}
+.nav-bar a {
+  text-decoration: none;
+}
+.nav-bar li {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+  height: 55px;
+  box-sizing: border-box;
+  border-bottom: 5px solid transparent;
+}
+.nav-bar li:hover {
+  border-bottom: 5px solid grey;
+}
+.logo {
+  font-family: 'Fredoka One', cursive;
+  font-size: 50px;
+  color: #1da1f2;
+  position: relative;
+}
+.nav {
+  display: flex;
+  justify-content: space-between;
+  height: 100%;
+  margin: 0 auto;
+  width: 90%;
+  align-items: center;
+  padding: 10px;
+}
+header {
+  background-color: white;
+  height: 60px;
+}
+body {
+  background-color: #E6ECF0;
+}
