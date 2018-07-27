@@ -1,0 +1,83 @@
+/* PHASE 12: Modal */
+.modal-screen {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  background: rgba(0,0,0,0.8);
+}
+
+.modal-form {
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  z-index: 3;
+  background: white;
+  margin-left: -200px;
+  padding: 20px;
+  width: 360px;
+}
+h4{
+  padding: 0;
+  margin: 0;
+  font-weight: 300;
+  font-size: 35px;
+}
+.js-modal-close {
+  position: absolute;
+  top: 25px;
+  right: 20px;
+  font-weight: 400px;
+  font-size: 20px;
+  cursor: pointer;
+}
+.js-modal-close:hover {
+  color: red;
+}
+.modal {
+  display: none;
+}
+.modal.is-open {
+  display: block;
+}
+.email-input {
+  margin-top: 15px;
+}
+.email-input .email-label {
+  display: block;
+}
+h3 {
+  font-size: 16px;
+  font-weight: 800px;
+  padding: 2px;
+  margin: 0;
+}
+.email-input input {
+  width: 80%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: 5px;
+}
+.pw-input label {
+  display: block;
+
+}
+.pw-input input {
+  width: 80%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: 5px;
+}
+.input-button {
+  padding: 20px;
+  background-color: green;
+  width: 50px;
+  color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  height: 10px;
+}
