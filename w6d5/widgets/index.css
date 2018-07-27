@@ -1,0 +1,21 @@
+.clock {
+  font-family: 'Noto Serif', serif;
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.clock-box {
+  background-color: yellow;
+  padding: 20px;
+  width: 100px;
+}
+
+.hidden {
+  display: none;
+}
+
+.show {
+  display: block;
+}
