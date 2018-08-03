@@ -7,6 +7,9 @@ class ItemDetail extends React.Component {
 
   render(){
       const {items} = this.props;
+      if (items === undefined ){
+        return (<h2>Loading Items!!!!</h2>);
+      }
       return (
         <ul>
           <li>Name: {items.name}</li>

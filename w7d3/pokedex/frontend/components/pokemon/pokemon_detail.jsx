@@ -19,7 +19,6 @@ class PokemonDetail extends React.Component {
 
   }
   render() {
-    console.log(this.props.pokemon);
     const {pokemon, items} = this.props;
 
     if(pokemon === undefined) {

@@ -9,4 +9,16 @@ class Api::PokemonController < ApplicationController
     render :show
   end
 
+  def create
+
+    @pokemon = Pokemon.new(pokemon_params)
+    if @pokemon.save!
+      redirect_to api_pokemon_url(@pokemon)
+    end
+  end
+
+  private
+  def pokemon_params
+    params.require(:pokemon).permit(:name, :image_url, :poke_type, :attack, :defense, moves: [], item_ids: [])
+  end
 end
